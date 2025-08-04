@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Porównanie panoram</title>
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #switchBtn {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="switchBtn">Pokaż wersję historyczną</button>
+
+    <a-scene>
+      <a-assets>
+        <img id="now" src="panorama_now.jpg" />
+        <img id="then" src="panorama_then.jpg" />
+      </a-assets>
+
+      <a-sky id="sky-now" src="#now" rotation="0 -90 0" visible="true"></a-sky>
+      <a-sky id="sky-then" src="#then" rotation="0 -90 0" visible="false"></a-sky>
+
+
+</a-entity>
+
+      <a-camera wasd-controls-enabled="false" look-controls="pointerLockEnabled: true"></a-camera>
+    </a-scene>
+
+    <script>
+      const skyNow = document.getElementById("sky-now");
+      const skyThen = document.getElementById("sky-then");
+      const btn = document.getElementById("switchBtn");
+      let showingNow = true;
+
+      btn.addEventListener("click", () => {
+        showingNow = !showingNow;
+        skyNow.setAttribute("visible", showingNow);
+        skyThen.setAttribute("visible", !showingNow);
+        btn.textContent = showingNow
+          ? "Pokaż wersję historyczną"
+          : "Pokaż wersję współczesną";
+      });
+	  
+	  AFRAME.registerComponent('show-info-on-click', {
+  init: function () {
+    this.el.addEventListener('click', function () {
+      const infoBox = document.querySelector('#infoBox');
+      infoBox.setAttribute('visible', true);
+    });
+  }
+});
+
+document.querySelector('#infoMarker').setAttribute('show-info-on-click', '');
+    </script>
+  </body>
+</html>
+
+
