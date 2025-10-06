@@ -4,30 +4,111 @@
     <meta charset="UTF-8" />
     <title>Porównanie panoram</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
     <style>
       body {
         margin: 0;
         overflow: hidden;
+        display: flex;
+        justify-content: center; 
+        align-items: flex-start;
+        font-family: Arial, sans-serif;
       }
-      #switchBtn {
+
+      /* 🔸 Wspólny styl dla pól informacyjnych */
+      .infoBox {
         position: absolute;
-        top: 20px;
         left: 20px;
         z-index: 10;
-        padding: 10px 20px;
-        background: rgba(255, 255, 255, 0.8);
-        border: none;
-        border-radius: 8px;
+        padding: 8px 12px;
+        background: white;
+        border: 5px solid black;
         font-size: 16px;
+        font-weight: bold;
+        max-width: 320px;
+      }
+
+      /* 🔸 Informacja o źródle */
+      #sourceInfo {
+        top: 20px;
+        text-align: left;
+      }
+
+      /* 🔸 Przycisk zmiany panoramy */
+      #switchBtn {
+        position: absolute;
+        top: 140px;
+        left: 20px;
+        z-index: 10;
+        padding: 8px 16px;
+        background: yellow;
+        border: 5px solid black;
+        font-size: 16px;
+        font-weight: bold;
         cursor: pointer;
+      }
+
+      /* 🔸 Przycisk powrotu (pod spodem, mniejszy) */
+      #backBtn {
+        position: absolute;
+        top: 200px;
+        left: 20px;
+        z-index: 10;
+        padding: 6px 12px;
+        background: white;
+        border: 5px solid black;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      /* 🔸 Ekran ładowania */
+      #loader {
+        position: fixed;
+        inset: 0;
+        background: black;
+        color: yellow;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 26px;
+        font-weight: bold;
+        z-index: 9999;
+        letter-spacing: 2px;
+      }
+
+      /* 🔸 Płynne znikanie loadera */
+      #loader.fade-out {
+        opacity: 0;
+        transition: opacity 1s ease;
+        pointer-events: none;
       }
     </style>
   </head>
-  <body>
-    <button id="switchBtn">Pokaż wersję historyczną</button>
 
+  <body>
+    <!-- 🔹 Ekran ładowania -->
+    <div id="loader">ŁADOWANIE PANORAMY...</div>
+
+    <!-- 🔹 Informacja o źródle -->
+    <div id="sourceInfo" class="infoBox">
+      ŹRÓDŁO ZDJĘCIA HISTORYCZNEGO:<br>
+      ---<br>
+      fanpage<br>
+      Moja Gołańcz - wczoraj, dziś i jutro
+    </div>
+
+    <!-- 🔹 Przycisk zmiany panoramy -->
+    <button id="switchBtn">POKAŻ WERSJĘ HISTORYCZNĄ</button>
+    
+    <!-- 🔹 Przycisk powrotu (niżej) -->
+    <button id="backBtn" onclick="window.location.href='https://l0de-dl.github.io/geoportal-historyczny'">
+      POWRÓT
+    </button>
+
+    <!-- 🔹 Scena A-Frame -->
     <a-scene>
-      <a-assets>
+      <a-assets timeout="5000">
         <img id="now" src="panorama_now.jpg" />
         <img id="then" src="panorama_then.jpg" />
       </a-assets>
@@ -35,39 +116,52 @@
       <a-sky id="sky-now" src="#now" rotation="0 -90 0" visible="true"></a-sky>
       <a-sky id="sky-then" src="#then" rotation="0 -90 0" visible="false"></a-sky>
 
-
-</a-entity>
-
-      <a-camera wasd-controls-enabled="false" look-controls="pointerLockEnabled: true"></a-camera>
+      <a-entity camera look-controls>
+        <a-entity cursor="fuse: true; fuseTimeout: 500"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                  material="color: black; shader: flat">
+        </a-entity>
+      </a-entity>
     </a-scene>
 
     <script>
+      // 🔸 Ukrycie ekranu ładowania po wczytaniu sceny
+      const scene = document.querySelector("a-scene");
+      const loader = document.getElementById("loader");
+
+      scene.addEventListener("loaded", () => {
+        loader.classList.add("fade-out");
+        setTimeout(() => loader.remove(), 1000);
+      });
+
+      // 🔸 Przełączanie panoram
       const skyNow = document.getElementById("sky-now");
       const skyThen = document.getElementById("sky-then");
       const btn = document.getElementById("switchBtn");
-      let showingNow = true;
+
+      // START: wersja historyczna
+      let showingNow = false;
+
+      skyNow.setAttribute("visible", showingNow);    // false
+      skyThen.setAttribute("visible", !showingNow);  // true
+
+      btn.textContent = showingNow
+        ? "POKAŻ WERSJĘ HISTORYCZNĄ"
+        : "POKAŻ WERSJĘ WSPÓŁCZESNĄ";
 
       btn.addEventListener("click", () => {
         showingNow = !showingNow;
         skyNow.setAttribute("visible", showingNow);
         skyThen.setAttribute("visible", !showingNow);
-        btn.textContent = showingNow
-          ? "Pokaż wersję historyczną"
-          : "Pokaż wersję współczesną";
-      });
-	  
-	  AFRAME.registerComponent('show-info-on-click', {
-  init: function () {
-    this.el.addEventListener('click', function () {
-      const infoBox = document.querySelector('#infoBox');
-      infoBox.setAttribute('visible', true);
-    });
-  }
-});
 
-document.querySelector('#infoMarker').setAttribute('show-info-on-click', '');
+        btn.textContent = showingNow
+          ? "POKAŻ WERSJĘ HISTORYCZNĄ"
+          : "POKAŻ WERSJĘ WSPÓŁCZESNĄ";
+      });
     </script>
   </body>
 </html>
+
 
 
