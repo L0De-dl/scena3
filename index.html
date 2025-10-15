@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Porównanie panoram</title>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-
+    <script src="https://unpkg.com/aframe-event-set-component@3.0.3/dist/aframe-event-set-component.min.js"></script>
     <style>
       body {
         margin: 0;
@@ -111,18 +111,22 @@
       <a-assets timeout="5000">
         <img id="now" src="panorama_now.jpg" />
         <img id="then" src="panorama_then.jpg" />
+        <img id="hotspot-image" src="informacja.png">
+        <img id="hotspot-image2" src="lupa.png">
       </a-assets>
 
       <a-sky id="sky-now" src="#now" rotation="0 -90 0" visible="true"></a-sky>
       <a-sky id="sky-then" src="#then" rotation="0 -90 0" visible="false"></a-sky>
 
-      <a-entity camera look-controls>
-        <a-entity cursor="fuse: true; fuseTimeout: 500"
-                  position="0 0 -1"
-                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                  material="color: black; shader: flat">
-        </a-entity>
-      </a-entity>
+      <a-camera><a-cursor></a-cursor></a-camera>
+
+      <a-plane src="#hotspot-image" position="0 0 -5" transparent="true"
+                event-set__enter="_event: mouseenter; _target: #Text200; visible: true"
+                event-set__leave="_event: mouseleave; _target: #Text200; visible: false"> 
+      <a-text id="Text200" value="Ą test ńka z żź" font="Roboto1-msdf.json" font-image="Roboto1-msdf.png" negate="false" align="center" color="#FFF" visible="false" position="0 0.25 0.55"
+              geometry="primitive: plane; width: 1.75" material="color: #333"></a-text>
+      </a-plane>
+      
     </a-scene>
 
     <script>
@@ -162,6 +166,7 @@
     </script>
   </body>
 </html>
+
 
 
 
