@@ -114,6 +114,7 @@
         <img id="hotspot-image" src="informacja.png">
         <img id="hotspot-image2" src="lupa.png">
         <img id="hotspot-image3" src="dzwiek.png">
+        <audio id="test" src="test.mp3" preload="auto"></audio>
       </a-assets>
 
       <a-sky id="sky-now" src="#now" rotation="0 -90 0" visible="true"></a-sky>
@@ -122,6 +123,7 @@
       <a-camera><a-cursor></a-cursor></a-camera>
 
       <a-plane src="#hotspot-image3" position="0 0 -5" transparent="true"
+                sound="src: #test; on: mouseenter; autoplay: false; loop: false"
                 event-set__enter="_event: mouseenter; _target: #Text200; visible: true"
                 event-set__leave="_event: mouseleave; _target: #Text200; visible: false"> 
       <a-text id="Text200" value="Scena nr 3 - 'Wędrujący kościół'" font="Roboto-msdf.json" font-image="Roboto-msdf.png" negate="false" align="center" color="#FFF" visible="false" position="0 0.124 0.55"
@@ -174,6 +176,7 @@
     </script>
   </body>
 </html>
+
 
 
 
